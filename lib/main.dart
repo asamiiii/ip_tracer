@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:process_run/shell.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
   runApp(const Home());
-  runAndDisplayCommand('tracert 8.8.8.8');
+  //runAndDisplayCommand('tracert 8.8.8.8');
 }
 
 class Home extends StatelessWidget {
@@ -21,7 +19,6 @@ class Home extends StatelessWidget {
 }
 
 class TraceScreen extends StatefulWidget {
-  static const defaultDNS = '8.8.8.8';
 
   @override
   State<TraceScreen> createState() => _TraceScreenState();
@@ -32,6 +29,7 @@ class _TraceScreenState extends State<TraceScreen> {
   late final TextEditingController ttlController;
   List<String?>? output;
   String? textOutput = '';
+  List<String>? splittedTextOutput=[];
 
   @override
   void initState() {
@@ -46,7 +44,7 @@ class _TraceScreenState extends State<TraceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('IP Tracer'),
+        title: const Text('IP Tracker'),
         actions:const [
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -90,11 +88,12 @@ class _TraceScreenState extends State<TraceScreen> {
                       showLoading(context, output);
                       output = await runAndDisplayCommand(hostController.text,);
                       textOutput = output![4];
+                      splittedTextOutput = textOutput?.split(RegExp(r'\s+'));
+                      print(splittedTextOutput?[8]);
+                      textOutput=splittedTextOutput?[8];
                       Navigator.pop(context);
                     }
                       
-                    
-
                     setState(() {});
                   },
                   child: const Text('Trace'),
@@ -116,15 +115,21 @@ class _TraceScreenState extends State<TraceScreen> {
               Container(
                 width: MediaQuery.of(context).size.width*0.70,
                 height: 100,
-                color: textOutput==''? Colors.transparent: Colors.amber,
+                color: textOutput==''? Colors.transparent: Colors.amberAccent,
                       child: Center(
-                        child: Text(
-                           '$textOutput',
-                          style: const TextStyle(
-                            fontSize: 25,
-                            height: 1.5,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                               textOutput==''?'': 'This IP is located in :  $textOutput',
+                              style: const TextStyle(
+                                fontSize: 25,
+                                height: 1.5,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            textOutput != '' ? Image.asset('assets/ip.png',height: 70,width: 70,) : const SizedBox()
+                          ],
                         ),
                       ),
                     )
