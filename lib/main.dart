@@ -86,7 +86,7 @@ class _TraceScreenState extends State<TraceScreen> {
                   onPressed: () async {
                     if (textOutput=='') {
                       showLoading(context, output);
-                      output = await runAndDisplayCommand(hostController.text,);
+                      output = await runCommand(hostController.text,);
                       textOutput = output![4];
                       splittedTextOutput = textOutput?.split(RegExp(r'\s+'));
                       print(splittedTextOutput?[8]);
@@ -103,7 +103,9 @@ class _TraceScreenState extends State<TraceScreen> {
                     textOutput='';
                     output=null;
                     hostController.text='';
+                    killCommand();
                     setState((){});
+                    
                   },
                   child: const Text('Clear'),
                 ),
@@ -140,16 +142,20 @@ class _TraceScreenState extends State<TraceScreen> {
     );
   }
 }
-
-Future<List<String?>> runAndDisplayCommand(String ip) async {
+var shell = Shell();
+//? run a command line
+Future<List<String?>> runCommand(String ip) async {
   List<String>? output;
-  var shell = Shell();
   await shell.run('tracert $ip').then((value) {
     output = value.map((e) => e.stdout.toString()).toList();
   });
   List<String?> splittedOutput = output![0].split('\n');
   //print('${splittedOutput[1]}------');
   return splittedOutput;
+}
+//! kill Command
+void killCommand(){
+  shell.kill();
 }
 
 void showLoading(BuildContext context, List<String?>? output,
