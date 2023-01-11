@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'functions.dart';
 
@@ -84,7 +83,7 @@ class _TraceScreenState extends State<TraceScreen> {
               padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.15),
               child: TextField(
-                style:TextStyle(fontSize: 50),
+                style:const TextStyle(fontSize: 50),
                 decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.account_tree_outlined),
                     border: OutlineInputBorder(),
@@ -122,7 +121,7 @@ class _TraceScreenState extends State<TraceScreen> {
                   child: const Text('Trace',
                       style: TextStyle(color: Colors.white)),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 OutlinedButton(
