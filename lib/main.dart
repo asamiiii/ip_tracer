@@ -1,9 +1,9 @@
-import 'package:process_run/shell.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'functions.dart';
 
 void main(List<String> args) {
   runApp(const Home());
-  //runAndDisplayCommand('tracert 8.8.8.8');
 }
 
 class Home extends StatelessWidget {
@@ -19,7 +19,6 @@ class Home extends StatelessWidget {
 }
 
 class TraceScreen extends StatefulWidget {
-
   @override
   State<TraceScreen> createState() => _TraceScreenState();
 }
@@ -27,9 +26,10 @@ class TraceScreen extends StatefulWidget {
 class _TraceScreenState extends State<TraceScreen> {
   late final TextEditingController hostController;
   late final TextEditingController ttlController;
+
   List<String?>? output;
   String? textOutput = '';
-  List<String>? splittedTextOutput=[];
+  List<String>? splittedTextOutput = [];
 
   @override
   void initState() {
@@ -37,15 +37,16 @@ class _TraceScreenState extends State<TraceScreen> {
 
     hostController = TextEditingController();
     ttlController = TextEditingController();
-  
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
+        backgroundColor: Colors.black12,
         title: const Text('IP Tracker'),
-        actions:const [
+        actions: const [
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Center(child: Text('Powered By : Ahmed Sami ')),
@@ -54,60 +55,89 @@ class _TraceScreenState extends State<TraceScreen> {
             padding: EdgeInsets.all(3.0),
             child: CircleAvatar(
               radius: 30,
-              
+
               //child:Image.asset('assets/avatar.jpg'),
               backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage('assets/avatar.jpg',),
-              foregroundColor: Colors.transparent,
+              backgroundImage: AssetImage(
+                'assets/avatar.jpg',
               ),
+              foregroundColor: Colors.transparent,
+            ),
           )
         ],
-        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Input IP address'),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'IP address',
-                labelText: 'IP',
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.20),
+              child: const Text(
+                'Input IP address',
+                style: TextStyle(color: Colors.white),
               ),
-              controller: hostController,
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.15),
+              child: TextField(
+                style:TextStyle(fontSize: 50),
+                decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.account_tree_outlined),
+                    border: OutlineInputBorder(),
+                    hintText: 'IP address',
+                    hintStyle: TextStyle(color: Colors.white),
+                    labelText: 'IP',
+                    labelStyle: TextStyle(color: Colors.white)),
+                controller: hostController,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
+                  style: const ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(Colors.green)),
                   onPressed: () async {
-                    if (textOutput=='') {
+                    if (textOutput == '') {
                       showLoading(context, output);
-                      output = await runCommand(hostController.text,);
+                      output = await runCommand(
+                        hostController.text,
+                      );
                       textOutput = output![4];
                       splittedTextOutput = textOutput?.split(RegExp(r'\s+'));
-                      print(splittedTextOutput?[8]);
-                      textOutput=splittedTextOutput?[8];
-                      Navigator.pop(context);
+                      //print(splittedTextOutput?[8]);
+                      textOutput = splittedTextOutput?[8];
+                      // ignore: use_build_context_synchronously
+                      hideLoading(context);
                     }
-                      
+
                     setState(() {});
                   },
-                  child: const Text('Trace'),
+                  child: const Text('Trace',
+                      style: TextStyle(color: Colors.white)),
+                ),
+                SizedBox(
+                  width: 20,
                 ),
                 OutlinedButton(
+                  style: const ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(Colors.black)),
                   onPressed: () {
-                    textOutput='';
-                    output=null;
-                    hostController.text='';
+                    textOutput = '';
+                    output = null;
+                    hostController.text = '';
                     killCommand();
-                    setState((){});
-                    
+                    setState(() {});
                   },
-                  child: const Text('Clear'),
+                  child: const Text('Clear',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -115,69 +145,39 @@ class _TraceScreenState extends State<TraceScreen> {
             const SizedBox(height: 16),
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               Container(
-                width: MediaQuery.of(context).size.width*0.70,
+                width: MediaQuery.of(context).size.width * 0.70,
                 height: 100,
-                color: textOutput==''? Colors.transparent: Colors.amberAccent,
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                               textOutput==''?'': 'This IP is located in :  $textOutput',
-                              style: const TextStyle(
-                                fontSize: 25,
-                                height: 1.5,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            textOutput != '' ? Image.asset('assets/ip.png',height: 70,width: 70,) : const SizedBox()
-                          ],
+                color:
+                    textOutput == '' ? Colors.transparent : Colors.amberAccent,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        textOutput == ''
+                            ? ''
+                            : 'This IP is located in :  $textOutput',
+                        style: const TextStyle(
+                          fontSize: 25,
+                          height: 1.5,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
+                      textOutput != ''
+                          ? Image.asset(
+                              'assets/ip.png',
+                              height: 70,
+                              width: 70,
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                ),
+              )
             ])
           ],
         ),
       ),
     );
   }
-}
-var shell = Shell();
-//? run a command line
-Future<List<String?>> runCommand(String ip) async {
-  List<String>? output;
-  await shell.run('tracert $ip').then((value) {
-    output = value.map((e) => e.stdout.toString()).toList();
-  });
-  List<String?> splittedOutput = output![0].split('\n');
-  //print('${splittedOutput[1]}------');
-  return splittedOutput;
-}
-//! kill Command
-void killCommand(){
-  shell.kill();
-}
-
-void showLoading(BuildContext context, List<String?>? output,
-    {bool isCancellable = true}) {
-      if(output==null){
-showDialog(
-    context: context,
-    barrierDismissible: isCancellable,
-    builder: (context) {
-      return AlertDialog(
-        title: Row(
-          children: const[
-            Text('Loading .. '),
-            SizedBox(
-              width: 15,
-            ),
-            CircularProgressIndicator()
-          ],
-        ),
-      );
-    },
-  );
-      }
-  
 }

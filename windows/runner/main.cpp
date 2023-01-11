@@ -26,7 +26,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   FlutterWindow window(project);
   Win32Window::Point origin(500, 250);
-  Win32Window::Size size(600, 400);
+  Win32Window::Size size(600, 450);
   if (!window.CreateAndShow(L"IP Tracker", origin, size)) {
     return EXIT_FAILURE;
   }

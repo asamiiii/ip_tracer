@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   process_run: ^0.12.3+2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -48,12 +49,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
-
-window_size:
-    git:
-      url: https://github.com/google/flutter-desktop-embedding
-      path: plugins/window_size
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
