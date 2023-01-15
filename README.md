@@ -4,7 +4,11 @@ A new Flutter project.
 
 This is a simple tool for locating a pc device in a local network. Currently, this tool is for windows OS only.
 
-https://user-images.githubusercontent.com/28768031/210817071-3b56f1b4-535b-4994-9f18-d54b50e6ba52.mp4
+
+
+https://user-images.githubusercontent.com/28768031/212535132-c0e600c6-ee28-40cf-a199-6d83e35328dc.mp4
+
+
 
 
 
